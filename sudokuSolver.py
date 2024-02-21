@@ -87,113 +87,54 @@ class SudokuSolver:
         return [firstFieldInSub, firstFieldInSub + 1, firstFieldInSub + 2,
                 firstFieldInSub + 9, firstFieldInSub + 10, firstFieldInSub + 11,
                 firstFieldInSub + 18, firstFieldInSub + 19, firstFieldInSub + 20]
-
-    def __removePossiblityRow(self, location, possibility):
+    
+    def __removePossiblityByCollections(self, location, possibility, collectionLocationsFunction, collectionFunction):
         """
-            (Private method) Eliminate the values that are no longer possibilities in row
+            (Private method) Eliminate the values that are no longer possibilities in the collection\n
+            A collection is either: row, column or subgrid
         """
-        for x in self.__rowLocations(self.__row(location)):
+        for x in collectionLocationsFunction(collectionFunction(location)):
             if possibility in self.sudoku[x] and len(self.sudoku[x]) != 1:
-                self.sudoku[x].remove(possibility)
-
-    def __removePossiblityCol(self, location, possibility):
-        """
-            (Private method) Eliminate the values that are no longer possibilities in column
-        """
-        for x in self.__colLocations(self.__col(location)):
-            if possibility in self.sudoku[x] and len(self.sudoku[x]) != 1:
-                self.sudoku[x].remove(possibility)
-
-    def __removePossiblitySub(self, location, possibility):
-        """
-            (Private method) Eliminate the values that are no longer possibilities in subgrid
-        """
-        for x in self.__subLocations(self.__sub(location)):
-            if possibility in self.sudoku[x] and len(self.sudoku[x]) != 1:
-                self.sudoku[x].remove(possibility)
-                
+                self.sudoku[x].remove(possibility)          
 
     def __removePossiblity(self, location, possibility):
         """
             (Private method) Eliminate the values that are no longer possibilities in the rows, columns
         """
-        self.__removePossiblityRow(location, possibility)
-        self.__removePossiblityCol(location, possibility)
-        self.__removePossiblitySub(location, possibility)
+        self.__removePossiblityByCollections(location, possibility, self.__rowLocations, self.__row)
+        self.__removePossiblityByCollections(location, possibility, self.__colLocations, self.__col)
+        self.__removePossiblityByCollections(location, possibility, self.__subLocations, self.__sub)
 
-    def __assignInRow(self, location, possibility):
+    def __assignInCollections(self, location, possibility, collectionLocationsFunction, collectionFunction):
         """
             (Private method) Assign the possibility to the only location in the row
         """
-        for x in self.__rowLocations(self.__row(location)):
-            if possibility in self.sudoku[location] and len(self.sudoku[x]) != 1:
-                self.sudoku[x] = [possibility]
-                return
-            
-    def __assignInCol(self, location, possibility):
-        """
-            (Private method) Assign the possibility to the only location in the column
-        """
-        for x in self.__colLocations(self.__col(location)):
-            if possibility in self.sudoku[location] and len(self.sudoku[x]) != 1:
-                self.sudoku[x] = [possibility]
-                return
-            
-    def __assignInSub(self, location, possibility):
-        """
-            (Private method) Assign the possibility to the only location in the subgrid
-        """
-        for x in self.__subLocations(self.__sub(location)):
+        for x in collectionLocationsFunction(collectionFunction(location)):
             if possibility in self.sudoku[location] and len(self.sudoku[x]) != 1:
                 self.sudoku[x] = [possibility]
                 return
 
-    def __assignRow(self, location):
+    def __assignByCollections(self, location, collectionLocationsFunction, collectionFunction):
         """
-            (Private method) Assign all possibilities to the location in all rows
+            (Private method) Assign all possibilities to the location in all collections\n
+            A collection is either: row, column or subgrid
         """
-        sumRow = []
-        for x in self.__rowLocations(self.__row(location)):
+        sum = []
+        for x in collectionLocationsFunction(collectionFunction(location)):
             if len(self.sudoku[x]) != 1:
-                sumRow.extend(self.sudoku[x])
-        sumRow.sort()
-        for x, count in list(set(map(lambda x:(x, sumRow.count(x)), sumRow))):
+                sum.extend(self.sudoku[x])
+        sum.sort()
+        for x, count in list(set(map(lambda x:(x, sum.count(x)), sum))):
             if count == 1:
-                self.__assignInRow(location, x)
-
-    def __assignCol(self, location):
-        """
-            (Private method) Assign all possibilities to the location in all columns
-        """
-        sumCol = []
-        for x in self.__colLocations(self.__col(location)):
-            if len(self.sudoku[x]) != 1:
-                sumCol.extend(self.sudoku[x])
-        sumCol.sort()
-        for x, count in list(set(map(lambda x:(x, sumCol.count(x)), sumCol))):
-            if count == 1:
-                self.__assignInCol(location, x)
-
-    def __assignSub(self, location):
-        """
-            (Private method) Assign all possibilities to the location in all subgrids
-        """
-        sumSub = []
-        for x in self.__subLocations(self.__sub(location)):
-            if len(self.sudoku[x]) != 1:
-                sumSub.extend(self.sudoku[x])
-        sumSub.sort()
-        for x, count in list(set(map(lambda x:(x, sumSub.count(x)), sumSub))):
-            if count == 1:
-                self.__assignInSub(location, x)
+                self.__assignInCollections(location, x, collectionLocationsFunction, collectionFunction)
 
     def __assign(self, location):
         """
             (Private method) Assign all possibilities to the location
         """
-        self.__assignRow(location)
-        self.__assignCol(location)
-        self.__assignSub(location)
+        self.__assignByCollections(location, self.__rowLocations, self.__row)
+        self.__assignByCollections(location, self.__colLocations, self.__col)
+        self.__assignByCollections(location, self.__subLocations, self.__sub)
 
     def solveOneStep(self):
         """
