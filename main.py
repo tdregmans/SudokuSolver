@@ -3,8 +3,7 @@
     main.py
     
     Thijs Dregmans (tdregmans)
-    Version: 3.1
-    Last edited algorithm: 2023-07-27
+    Version: 3.2
     Last edited: 2024-02-21
 """
 
@@ -28,7 +27,7 @@ print("█▀█████▀  ▀████▀███▄ ▀████�
 print("                                                                                                               ")
 print("                                                                                                               ")
 print("Thijs Dregmans (tdregmans)")
-print("Version 3.1")
+print("Version 3.2")
 print("===============================================================================================================")
 
 """
