@@ -48,6 +48,27 @@ print("=========================================================================
 
 """
 
+# Function used by `main.py` to save a custom sudoku to solve with SudokuSolver
+def enterCustomSudoku():
+    print("Enter in a Sudoku.")
+    print("Enter the fields row by row, from left to right.")
+    print("If a field is empty, enter nothing i.e. ''")
+    
+    sudoku = []
+    for field in range(SIZE * SIZE):
+        i = input("Enter field " + str(field) + ": ")
+        if i == "":
+            sudoku.append([])
+        else:
+            sudoku.append([int(i)])
+    i = input("Is the correct? (y/n) ")
+    if i == 'y':
+        return sudoku
+    else:
+        print("retry")
+
+
+
 ### Usecase 1
 
 # # Create solver
@@ -59,8 +80,6 @@ print("=========================================================================
 # print("Found solution: ")
 # print("===============================================================================================================")
 # solver.print()
-
-
 
 
 
