@@ -3,6 +3,11 @@
 I came up with this idea, during the holidays. I solved a couple of sudoku's and asked myself if I could write a program that could do the same.
 I think I can. My implementation of my own algoritm is done in Python. 
 
+| :exclamation:  This is very important!  |
+|-----------------------------------------|
+There is a major bug in the latest version!
+
+
 ## The algoritm
 A normal sudoku is a puzzle with 3 by 3 grids of 3 by 3. Each row and column is unique. They are filled by numbers from 1 to 9. Each number has to be used 9 times. Each column has to contain all the numbers once. Each row has to contain all the numbers once. Each subgrid has to contain all the numbers once.
 
